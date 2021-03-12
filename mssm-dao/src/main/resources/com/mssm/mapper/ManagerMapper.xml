@@ -3,10 +3,19 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mssm.mapper.ManagerMapper">
 
-    <select id="findAllManager" resultType="com.mssm.domain.Manager">
+    <select id="findAllManager" resultType="manager">
         SELECT id,name,phone,portrait,status,locked
           FROM manager
          where deleted = 0
+    </select>
+
+    <select id="findManagerByNameOrPhone" parameterType="manager" resultType="managerr">
+        select id,name,phone,password
+          from manager
+         where deleted = 0
+           and locked = 0
+           and status = 1
+           and name = #{name} or phone = #{phone}
     </select>
 
 </mapper>
