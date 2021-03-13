@@ -1,9 +1,6 @@
 package com.mssm.utils;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -56,11 +53,19 @@ public class JwtUtil {
         //System.out.println(william);
     }
 
-    public static Claims verify(String jwt){
-        //获取签名时候使用的密钥
-        SecretKey secretKey = generalKey();
-        Claims william = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwt).getBody();
-        return william;
+    // 验证
+    public static Boolean verify(String jwt){
+        try{
+            //获取签名时候使用的密钥
+            SecretKey secretKey = generalKey();
+            Claims william = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwt).getBody();
+            System.out.println("解密jwd令牌:"+william);
+            return true;
+        } catch (Exception e){
+            System.out.println("解密失败");
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**

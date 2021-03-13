@@ -68,7 +68,7 @@ public class ManagerServiceImpl implements ManagerService {
         // 2.2 验证成功
         managerR.setPassword(null);
         // 2.2.1 token
-        String jwt = JwtUtil.createJWT(managerR.getId().toString(), "mssm", System.currentTimeMillis() + 1000 * 60 * 60 * 24L);
+        String jwt = JwtUtil.createJWT(managerR.getId().toString(), "mssm", 1000*60*60*24L);
         HttpSession session = request.getSession();
         session.setAttribute("token", jwt);
         managerR.setToken(jwt);

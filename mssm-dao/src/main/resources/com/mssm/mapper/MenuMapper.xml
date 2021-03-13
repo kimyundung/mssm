@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mssm.mapper.MenuMapper">
+
+    <resultMap id="menuMap" type="menu">
+        <id column="id" property="id"/>
+        <result column="pid" property="pid"/>
+        <result column="href" property="href"/>
+        <result column="icon" property="icon"/>
+        <result column="name" property="name"/>
+        <result column="description" property="description"/>
+        <result column="shown" property="shown"/>
+        <result column="onum" property="onum"/>
+        <result column="level" property="level"/>
+        <result column="createtime" property="createtime"/>
+        <result column="updatetime" property="updatetime"/>
+        <collection property="subMenu" column="id" ofType="menu" select="com.mssm.mapper.MenuMapper.findSubMenuByPid"/>
+    </resultMap>
+    <select id="findAllMenu" resultMap="menuMap">
+        select *
+          from menu
+         where pid = -1
+           and shown = 1
+           and level = 0
+    </select>
+
+    <select id="findSubMenuByPid" resultType="menu">
+        select *
+          from menu
+         where pid = #{id}
+           and shown = 1
+           and level = 1
+    </select>
+</mapper>
