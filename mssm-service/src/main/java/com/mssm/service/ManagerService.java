@@ -12,4 +12,16 @@ public interface ManagerService {
     public List<Manager> managerList(QueryInfo queryInfo);
     // 管理员登陆
     public ManagerR login(Manager manager, HttpServletRequest request) throws Exception;
+    // 修改管理员状态
+    public void changeManagerStatus(Manager manager);
+    // 添加管理员
+    public void saveManager(Manager manager) throws Exception;
+    // 编辑管理员
+    public void updateManager(Manager manager);
+    // 编辑密码
+    public void updatePassword(Manager manager) throws Exception;
+    // 验证管理者名
+    public Integer checkName(String name);
+    // 删除用户
+    public void deleteManager(Integer id);
 }

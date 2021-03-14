@@ -7,42 +7,26 @@ import com.mssm.mapper.ManagerMapper;
 import com.mssm.service.ManagerService;
 import com.mssm.utils.JwtUtil;
 import com.mssm.utils.Md5;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 
 @Service
 public class ManagerServiceImpl implements ManagerService {
+
+    private static final String KEY = "misssimple";
 
     @Autowired
     private ManagerMapper managerMapper;
 
     @Override
     public List<Manager> managerList(QueryInfo queryInfo) {
-
-        // query pagenum pagesize 为空
-        if(queryInfo.getQuery()==null && queryInfo.getPagenum()==null && queryInfo.getPagesize()==null){
-            List<Manager> managerList = managerMapper.findAllManager();
-            return managerList;
-        }
-        // query 为空
-        else if (queryInfo.getQuery()==null) {
-            System.out.println("wait......");
-        }
-        // pagenum pagesize 是否为空
-        else if (queryInfo.getPagenum()==null && queryInfo.getPagesize()==null) {
-            System.out.println("wait......");
-        }
-
-        return null;
+        List<Manager> managerList = managerMapper.findAllManager(queryInfo.getQuery());
+        return managerList;
     }
 
     @Override
@@ -74,4 +58,43 @@ public class ManagerServiceImpl implements ManagerService {
         managerR.setToken(jwt);
         return managerR;
     }
+
+    @Override
+    public void changeManagerStatus(Manager manager) {
+        manager.setUpdatetime(new Date());
+        managerMapper.changeManagerStatus(manager);
+    }
+
+    @Override
+    public void saveManager(Manager manager) throws Exception {
+        manager.setPassword(Md5.md5(manager.getPassword(), KEY));
+        managerMapper.saveManager(manager);
+    }
+
+    @Override
+    public void updateManager(Manager manager) {
+        manager.setUpdatetime(new Date());
+        managerMapper.updateManager(manager);
+    }
+
+    @Override
+    public void updatePassword(Manager manager) throws Exception {
+        manager.setUpdatetime(new Date());
+        manager.setPassword(Md5.md5(manager.getPassword(),KEY));
+        managerMapper.updatePassword(manager);
+    }
+
+    @Override
+    public Integer checkName(String name) {
+        return managerMapper.checkName(name);
+    }
+
+    @Override
+    public void deleteManager(Integer id) {
+        Manager manager = new Manager();
+        manager.setId(id);
+        manager.setDeletetime(new Date());
+        managerMapper.deleteManager(manager);
+    }
+
 }

@@ -3,12 +3,15 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mssm.mapper.ManagerMapper">
 
+    <!--查询所有-->
     <select id="findAllManager" resultType="manager">
-        SELECT id,name,phone,portrait,status,locked
+        SELECT id,name,phone,portrait,status,locked,createtime
           FROM manager
          where deleted = 0
+           and (name like concat('%',#{name},'%')  or phone like concat('%',#{phone},'%'))
     </select>
 
+    <!--登录查询-->
     <select id="findManagerByNameOrPhone" parameterType="manager" resultType="managerr">
         select id,name,phone,password
           from manager
@@ -18,4 +21,37 @@
            and name = #{name} or phone = #{phone}
     </select>
 
+    <!--编辑管理员状态-->
+    <update id="changeManagerStatus" parameterType="manager">
+        update manager set status = #{status}, updatetime = #{updatetime} where id = #{id}
+    </update>
+
+    <!--添加管理员-->
+    <insert id="saveManager" parameterType="manager">
+        insert into manager (name,phone,portrait,password)
+        values (#{name},#{phone},#{portrait},#{password})
+    </insert>
+
+    <!--编辑管理员-->
+    <update id="updateManager" parameterType="manager">
+        update manager set name=#{name}, phone=#{phone}, portrait=#{portrait}, updatetime=#{updatetime}
+         where id=#{id}
+    </update>
+
+    <!--编辑密码-->
+    <update id="updatePassword" parameterType="manager">
+        update manager set password=#{password}, updatetime=#{updatetime}
+         where id=#{id}
+    </update>
+
+    <!--验证管理员名-->
+    <select id="checkName" parameterType="string" resultType="int">
+        select count(*) cnt from manager where name = #{name}
+    </select>
+
+    <!--逻辑删除用户-->
+    <update id="deleteManager" parameterType="manager">
+        update manager set deleted=1, deletetime=#{deletetime}
+         where id=#{id}
+    </update>
 </mapper>

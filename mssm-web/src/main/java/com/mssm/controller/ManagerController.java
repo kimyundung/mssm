@@ -2,6 +2,7 @@ package com.mssm.controller;
 
 import com.mssm.domain.*;
 import com.mssm.service.ManagerService;
+import com.mssm.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,27 +15,38 @@ import java.util.List;
 @RequestMapping("/manager")
 public class ManagerController {
 
+    private static final String AUTH = "Authorization";
+
     @Autowired
     private ManagerService managerService;
 
     @RequestMapping("/managerList")
-    public ResponseResult managerList(@RequestBody QueryInfo queryInfo){
-        System.out.println(">>>>>>>>>>>> queryInfo : " + queryInfo);
+    public ResponseResult managerList(QueryInfo queryInfo, HttpServletRequest request){
+        Boolean verify = JwtUtil.verify(request.getHeader(AUTH));
         ResponseResult result = new ResponseResult();
-        try{
-            List<Manager> managerList = managerService.managerList(queryInfo);
-            if(managerList != null) {
-                result.setData(managerList);
-                result.setMeta(new Meta(200,"查询成功"));
-            } else {
-                result.setMeta(new Meta(500,"查询失败, 参数有误"));
+
+        // token验证成功
+        if(verify){
+            try{
+                List<Manager> managerList = managerService.managerList(queryInfo);
+                if(managerList != null) {
+                    result.setData(managerList);
+                    result.setMeta(new Meta(200,"查询成功"));
+                    return result;
+                } else {
+                    result.setMeta(new Meta(500,"用户列表查询失败, 参数有误"));
+                    return result;
+                }
+            }catch (Exception e) {
+                e.printStackTrace();
+                result.setMeta(new Meta(500,"用户列表查询失败, 产生意外"));
+                return result;
             }
-        }catch (Exception e) {
-            e.printStackTrace();
-            result.setMeta(new Meta(500,"查询失败, 产生意外"));
-        } finally {
-            return result;
         }
+
+        // token验证失败
+        result.setMeta(new Meta(501,"用户列表获取失败, token失效"));
+        return result;
     }
 
     @RequestMapping("/login")
@@ -43,17 +55,135 @@ public class ManagerController {
         try {
             ManagerR managerR = managerService.login(manager,request);
             if (managerR == null){
-                result.setMeta(new Meta(500,"登陆失败, 用户名或密码错误"));
+                result.setMeta(new Meta(500,"登录失败, 用户名或密码错误"));
+                return result;
             } else {
                 result.setData(managerR);
-                result.setMeta(new Meta(200,"登陆成功"));
+                result.setMeta(new Meta(200,"登录成功"));
+                return result;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            result.setMeta(new Meta(501,"登陆失败, 出现异常"));
-        } finally {
+            result.setMeta(new Meta(501,"登录失败, 出现异常"));
             return result;
         }
     }
 
+    @RequestMapping("/managerStatus")
+    public ResponseResult managerStatus(Manager manager,HttpServletRequest request){
+        ResponseResult result = new ResponseResult();
+
+        // token验证成功
+        if(JwtUtil.verify(request.getHeader(AUTH))){
+            try {
+                managerService.changeManagerStatus(manager);
+                result.setMeta(new Meta(200,"状态修改成功"));
+                return result;
+            }catch (Exception e){
+                e.printStackTrace();
+                result.setMeta(new Meta(500,"状态修改失败, 产生意外"));
+                return result;
+            }
+        }
+        // token验证失败
+        result.setMeta(new Meta(501,"状态修改失败, token失效"));
+        return result;
+    }
+
+    @RequestMapping("/saveManager")
+    public ResponseResult saveManager(@RequestBody Manager manager, HttpServletRequest request){
+        ResponseResult result = new ResponseResult();
+
+        // token验证成功
+        if(JwtUtil.verify(request.getHeader(AUTH))){
+            try{
+                // 添加管理员
+                if(manager.getId()==null){
+                    managerService.saveManager(manager);
+                    result.setMeta(new Meta(201,"添加管理员成功"));
+                    return result;
+                }
+                // 编辑管理员
+                else {
+                    managerService.updateManager(manager);
+                    result.setMeta(new Meta(201,"编辑管理员成功"));
+                    return result;
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+                if(manager.getId()==null){
+                    result.setMeta(new Meta(500,"添加管理员失败, 产生意外"));
+                    return result;
+                } else {
+                    result.setMeta(new Meta(500,"编辑管理员失败, 产生意外"));
+                    return result;
+                }
+            }
+        }
+        // token验证失败
+        result.setMeta(new Meta(501,"添加管理员失败, token失效"));
+        return result;
+    }
+
+    @RequestMapping("/updatePassword")
+    public ResponseResult updatePassword(@RequestBody Manager manager, HttpServletRequest request){
+        ResponseResult result = new ResponseResult();
+        if(JwtUtil.verify(request.getHeader(AUTH))){
+            try{
+                managerService.updatePassword(manager);
+                result.setMeta(new Meta(201,"编辑密码成功"));
+                return result;
+            }catch (Exception e){
+                e.printStackTrace();
+                result.setMeta(new Meta(500,"编辑密码失败, 产生意外"));
+                return result;
+            }
+        }
+        // token验证失败
+        result.setMeta(new Meta(501,"编辑密码失败, token失效"));
+        return result;
+    }
+
+    @RequestMapping("/checkName")
+    public ResponseResult checkName(String name,HttpServletRequest request){
+        ResponseResult result = new ResponseResult();
+        if(JwtUtil.verify(request.getHeader(AUTH))){
+            try{
+                int cnt = managerService.checkName(name);
+                if(cnt == 0) {
+                    result.setMeta(new Meta(200,"该用户名可用"));
+                    return result;
+                } else {
+                    result.setMeta(new Meta(502,"该用户以存在"));
+                    return result;
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+                result.setMeta(new Meta(500,"验证用户名失败, 产生意外"));
+                return result;
+            }
+        }
+        // token验证失败
+        result.setMeta(new Meta(501,"验证用户名失败, token失效"));
+        return result;
+    }
+
+    @RequestMapping("/deleteManager")
+    public ResponseResult deleteManager(Integer id, HttpServletRequest request){
+        ResponseResult result = new ResponseResult();
+        if(JwtUtil.verify(request.getHeader(AUTH))){
+            try{
+                managerService.deleteManager(id);
+                result.setMeta(new Meta(202,"删除用户成功"));
+                return result;
+            } catch (Exception e){
+                e.printStackTrace();
+                result.setMeta(new Meta(500,"删除用户失败,产生意外"));
+                return result;
+            }
+        }
+        // token验证失败
+        result.setMeta(new Meta(501,"删除用户失败, token失效"));
+        return result;
+    }
 }
