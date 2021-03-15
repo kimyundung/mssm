@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mssm.mapper.CategoryMapper">
+
+    <!--查询一级+二级+三级-->
+    <resultMap id="allCategoryMap" type="category">
+        <id column="id" property="id"/>
+        <result column="pid" property="pid"/>
+        <result column="name" property="name"/>
+        <result column="icon" property="icon"/>
+        <result column="src" property="src"/>
+        <result column="level" property="level"/>
+        <result column="status" property="status"/>
+        <result column="createtime" property="createtime"/>
+        <result column="updatetime" property="updatetime"/>
+        <collection property="children" column="id" ofType="category" select="com.mssm.mapper.CategoryMapper.findSecondCategory">
+        </collection>
+    </resultMap>
+    <select id="findAllCategory" resultMap="allCategoryMap">
+        select *
+          from category
+         where deleted = 0
+           and pid = #{id}
+    </select>
+
+    <!--查询一级+二级-->
+    <resultMap id="secondCategoryMap" type="category">
+        <id column="id" property="id"/>
+        <result column="pid" property="pid"/>
+        <result column="name" property="name"/>
+        <result column="icon" property="icon"/>
+        <result column="src" property="src"/>
+        <result column="level" property="level"/>
+        <result column="status" property="status"/>
+        <result column="createtime" property="createtime"/>
+        <result column="updatetime" property="updatetime"/>
+        <collection property="children" column="id" ofType="category" select="com.mssm.mapper.CategoryMapper.findThirdCategoryByPid"></collection>
+    </resultMap>
+    <select id="findSecondCategory" resultMap="secondCategoryMap">
+        select *
+          from category
+         where deleted = 0
+           and pid = #{id}
+    </select>
+
+    <!--查询所有三级分类-->
+    <select id="findThirdCategoryByPid" resultType="category">
+        select *
+          from category
+         where deleted = 0
+           and pid = #{id}
+    </select>
+
+    <!--查询一级分类-->
+    <select id="findFirstCategory" resultType="category">
+        select *
+          from category
+         where deleted = 0
+           and pid = #{id}
+    </select>
+
+    <!--查询商品分类名称-->
+    <select id="findCategoryName" parameterType="string" resultType="int">
+        select count(*) cnt
+          from category
+         where deleted = 0
+           and name = #{name}
+    </select>
+
+    <!--添加分类-->
+    <insert id="insertCategory" parameterType="category">
+        insert into category (pid,name,icon,src,level)
+        values (#{pid},#{name},#{icon},#{src},#{level})
+    </insert>
+
+    <!--编辑分类-->
+    <update id="updateCategory" parameterType="category">
+        update category
+           set name=#{name},icon=#{icon},src=#{src},updatetime=#{updatetime}
+         where id=#{id}
+    </update>
+
+    <!--修改分类状态-->
+    <update id="updateCategoryStatus" parameterType="category">
+        update category
+           set status=#{status},updatetime=#{updatetime}
+         where id=#{id}
+    </update>
+
+    <!--根据分类id查询所有子分类id-->
+    <select id="findSubCategoryIdList" parameterType="int" resultType="int">
+        select id
+          from category
+         where deleted = 0
+           and pid=#{id}
+    </select>
+
+    <!--根据分类id查询所有父分类id-->
+    <select id="findParCategoryPid" parameterType="int" resultType="int">
+        select pid
+          from category
+         where deleted = 0
+           and id=#{pid}
+    </select>
+
+    <!--逻辑删除分类-->
+    <update id="deleteCategory" parameterType="category">
+        update category
+           set deleted=1,deletetime=#{deletetime}
+         where id = #{id}
+    </update>
+</mapper>

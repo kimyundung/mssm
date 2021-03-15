@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * 状态封装类
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

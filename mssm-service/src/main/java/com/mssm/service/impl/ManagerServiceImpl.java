@@ -94,6 +94,7 @@ public class ManagerServiceImpl implements ManagerService {
         Manager manager = new Manager();
         manager.setId(id);
         manager.setDeletetime(new Date());
+        manager.setPhone(String.valueOf(System.currentTimeMillis()));
         managerMapper.deleteManager(manager);
     }
 

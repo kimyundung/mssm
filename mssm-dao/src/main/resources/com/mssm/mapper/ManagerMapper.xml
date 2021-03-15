@@ -51,7 +51,7 @@
 
     <!--逻辑删除用户-->
     <update id="deleteManager" parameterType="manager">
-        update manager set deleted=1, deletetime=#{deletetime}
+        update manager set deleted=1, deletetime=#{deletetime}, phone=#{phone}
          where id=#{id}
     </update>
 </mapper>
