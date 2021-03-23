@@ -46,7 +46,7 @@
 
     <!--验证管理员名-->
     <select id="checkName" parameterType="string" resultType="int">
-        select count(*) cnt from manager where name = #{name}
+        select count(*) cnt from manager where deleted = 0 and name = #{name}
     </select>
 
     <!--逻辑删除用户-->

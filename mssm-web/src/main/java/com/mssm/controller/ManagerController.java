@@ -72,6 +72,7 @@ public class ManagerController {
     @RequestMapping("/managerStatus")
     public ResponseResult managerStatus(Manager manager,HttpServletRequest request){
         ResponseResult result = new ResponseResult();
+        System.out.println(">>>>>>> " + manager);
 
         // token验证成功
         if(JwtUtil.verify(request.getHeader(AUTH))){
@@ -91,27 +92,27 @@ public class ManagerController {
     }
 
     @RequestMapping("/saveManager")
-    public ResponseResult saveManager(@RequestBody Manager manager, HttpServletRequest request){
+    public ResponseResult saveManager(@RequestBody ManagerVO managerVO, HttpServletRequest request){
         ResponseResult result = new ResponseResult();
 
         // token验证成功
         if(JwtUtil.verify(request.getHeader(AUTH))){
             try{
                 // 添加管理员
-                if(manager.getId()==null){
-                    managerService.saveManager(manager);
+                if(managerVO.getId()==null){
+                    managerService.saveManager(managerVO);
                     result.setMeta(new Meta(201,"添加管理员成功"));
                     return result;
                 }
                 // 编辑管理员
                 else {
-                    managerService.updateManager(manager);
+                    managerService.updateManager(managerVO);
                     result.setMeta(new Meta(201,"编辑管理员成功"));
                     return result;
                 }
             }catch (Exception e){
                 e.printStackTrace();
-                if(manager.getId()==null){
+                if(managerVO.getId()==null){
                     result.setMeta(new Meta(500,"添加管理员失败, 产生意外"));
                     return result;
                 } else {

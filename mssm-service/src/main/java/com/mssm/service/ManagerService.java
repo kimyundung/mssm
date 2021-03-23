@@ -2,6 +2,7 @@ package com.mssm.service;
 
 import com.mssm.domain.Manager;
 import com.mssm.domain.ManagerR;
+import com.mssm.domain.ManagerVO;
 import com.mssm.domain.QueryInfo;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,9 +16,9 @@ public interface ManagerService {
     // 修改管理员状态
     public void changeManagerStatus(Manager manager);
     // 添加管理员
-    public void saveManager(Manager manager) throws Exception;
+    public void saveManager(ManagerVO managerVO) throws Exception;
     // 编辑管理员
-    public void updateManager(Manager manager);
+    public void updateManager(ManagerVO managerVO) throws Exception;
     // 编辑密码
     public void updatePassword(Manager manager) throws Exception;
     // 验证管理者名

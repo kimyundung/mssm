@@ -2,11 +2,13 @@ package com.mssm.service.impl;
 
 import com.mssm.domain.Manager;
 import com.mssm.domain.ManagerR;
+import com.mssm.domain.ManagerVO;
 import com.mssm.domain.QueryInfo;
 import com.mssm.mapper.ManagerMapper;
 import com.mssm.service.ManagerService;
 import com.mssm.utils.JwtUtil;
 import com.mssm.utils.Md5;
+import com.mssm.utils.UploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,15 +68,26 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
-    public void saveManager(Manager manager) throws Exception {
-        manager.setPassword(Md5.md5(manager.getPassword(), KEY));
-        managerMapper.saveManager(manager);
+    public void saveManager(ManagerVO managerVO) throws Exception {
+        // 处理头像
+        if(managerVO.getNewFilepath()!=null){
+            String fileId = UploadUtil.fdfsUpload(managerVO.getOriginalFilename(), managerVO.getNewFilepath());
+            managerVO.setPortrait("http://www.aaa.com/"+fileId);
+        }
+        // 密码
+        managerVO.setPassword(Md5.md5(managerVO.getPassword(), KEY));
+        managerMapper.saveManager(managerVO);
     }
 
     @Override
-    public void updateManager(Manager manager) {
-        manager.setUpdatetime(new Date());
-        managerMapper.updateManager(manager);
+    public void updateManager(ManagerVO managerVO) throws Exception {
+        // 处理头像
+        if(managerVO.getNewFilepath()!=null){
+            String fileId = UploadUtil.fdfsUpload(managerVO.getOriginalFilename(), managerVO.getNewFilepath());
+            managerVO.setPortrait("http://www.aaa.com/"+fileId);
+        }
+        managerVO.setUpdatetime(new Date());
+        managerMapper.updateManager(managerVO);
     }
 
     @Override
