@@ -23,15 +23,8 @@ public class MenuController {
 
     @RequestMapping("findAllMenu")
     public ResponseResult findAllMenu(HttpServletRequest request) {
-
         ResponseResult result = new ResponseResult();
 
-        // 验证token
-        String authorization = request.getHeader("Authorization");
-        Boolean verify = JwtUtil.verify(authorization);
-
-        // 验证通过
-        if(verify){
             try {
                 // 获取菜单
                 List<Menu> menuList = menuService.findAllMenu();
@@ -41,17 +34,11 @@ public class MenuController {
                 } else {
                     result.setMeta(new Meta(500, "获取失败, null"));
                 }
+                return result;
             } catch (Exception e) {
                 e.printStackTrace();
                 result.setMeta(new Meta(500, "获取失败, 出现异常"));
-            } finally {
                 return result;
             }
-        }
-
-        // 验证失败
-        result.setMeta(new Meta(501,"获取失败, token失效"));
-        return result;
-
     }
 }
