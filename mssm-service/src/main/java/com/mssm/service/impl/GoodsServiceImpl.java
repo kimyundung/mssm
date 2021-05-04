@@ -2,10 +2,7 @@ package com.mssm.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.mssm.domain.File;
-import com.mssm.domain.Goods;
-import com.mssm.domain.QueryInfo;
-import com.mssm.domain.QueryVO;
+import com.mssm.domain.*;
 import com.mssm.mapper.FileMapper;
 import com.mssm.mapper.GoodsMapper;
 import com.mssm.service.FileService;

@@ -2,9 +2,11 @@ package com.mssm.service;
 
 import com.github.pagehelper.PageInfo;
 import com.mssm.domain.Goods;
+import com.mssm.domain.GoodsStock;
 import com.mssm.domain.QueryInfo;
 import com.mssm.domain.QueryVO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface GoodsService {
@@ -45,5 +47,4 @@ public interface GoodsService {
      * @return
      */
     public Goods queryById(Integer id);
-
 }

@@ -1,12 +1,8 @@
 package com.mssm.controller;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.github.pagehelper.PageInfo;
 import com.mssm.domain.*;
-import com.mssm.service.FileService;
 import com.mssm.service.GoodsService;
-import com.mssm.utils.JwtUtil;
-import com.mssm.utils.UploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/goods")
@@ -22,8 +18,6 @@ public class GoodsController {
 
     @Autowired
     private GoodsService goodsService;
-    @Autowired
-    private FileService fileService;
 
     /**
      * 保存商品(插入+更新)
@@ -120,4 +114,5 @@ public class GoodsController {
         }
 
     }
+
 }

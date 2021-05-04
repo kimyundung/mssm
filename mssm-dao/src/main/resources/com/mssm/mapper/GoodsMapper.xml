@@ -65,4 +65,5 @@
          where deleted = 0
            and id = #{id}
     </update>
+
 </mapper>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mssm.mapper.AttributeMapper">
+    <select id="findAllColor" resultType="com.mssm.domain.Color">
+        select * from color
+    </select>
+    <select id="findAllSize" resultType="com.mssm.domain.Size">
+        select * from size
+    </select>
+
+</mapper>
