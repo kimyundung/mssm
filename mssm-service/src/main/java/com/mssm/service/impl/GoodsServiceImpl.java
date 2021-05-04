@@ -36,8 +36,6 @@ public class GoodsServiceImpl implements GoodsService {
         // 编辑商品
         else {
             goodsMapper.updateGoods(goods);
-            fileMapper.delete(goods.getId());
-            fileService.addFileList(goods);
         }
     }
 
@@ -75,8 +73,10 @@ public class GoodsServiceImpl implements GoodsService {
         Goods goods = goodsMapper.queryById(id);
         // 图片信息
         List<File> files = fileMapper.queryByGid(id);
+        List<File> files3 = fileMapper.queryByGid3(id);
         // 商品+图片
         goods.setFileList(files);
+        goods.setFileList3(files3);
         return goods;
     }
 }

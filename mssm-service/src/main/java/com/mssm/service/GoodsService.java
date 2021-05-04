@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface GoodsService {
     /**
-     * 添加商品
+     * 添加商品+编辑商品
      * @param goods 商品信息
      */
     public void addGoods(Goods goods);
@@ -45,4 +45,5 @@ public interface GoodsService {
      * @return
      */
     public Goods queryById(Integer id);
+
 }

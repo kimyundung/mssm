@@ -26,7 +26,7 @@ public class GoodsController {
     private FileService fileService;
 
     /**
-     * 保存商品
+     * 保存商品(插入+更新)
      * @param goods
      * @param request
      * @return

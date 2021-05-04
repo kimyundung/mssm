@@ -21,10 +21,29 @@ public class FileServiceImpl implements FileService {
      */
     @Override
     public void addFileList(Goods goods) {
+        goods.getFileList().addAll(goods.getFileList3());
         for(File file : goods.getFileList()){
             file.setGid(goods.getId());
             fileMapper.addFile(file);
         }
+    }
+
+    /**
+     * 根据商品id添加图片
+     * @param fileInfo
+     */
+    @Override
+    public void addFile(File fileInfo) {
+        fileMapper.addFile(fileInfo);
+    }
+
+    /**
+     * 根据fileid删除file(物理)
+     * @param fid
+     */
+    @Override
+    public void deleteFile(Integer fid) {
+        fileMapper.deleteByFId(fid);
     }
 
 

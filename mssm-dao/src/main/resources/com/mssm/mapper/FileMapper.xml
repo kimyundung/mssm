@@ -5,25 +5,43 @@
 
     <!--添加图片信息-->
     <insert id="addFile" parameterType="com.mssm.domain.File">
+        <selectKey keyColumn="id" keyProperty="id" resultType="int" order="AFTER">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
         insert into file
         (gid,originalFilename,newFilename,newFilepath,fastDFSFileId,fastDFSPath,topPic)
         values
         (#{gid},#{originalFilename},#{newFilename},#{newFilepath},#{fastDFSFileId},#{fastDFSPath},#{topPic})
     </insert>
 
-    <!--根据商品Gid查询图片-->
+    <!--根据商品Gid查询图片 (主图)-->
     <select id="queryByGid" resultType="com.mssm.domain.File">
         select id,gid,fastDFSPath,fastDFSFileId,newFilepath
           from file
-         where deleted = 0
+         where 1=1
+           and topPic = 1
+           and gid = #{gid}
+    </select>
+
+    <!--根据商品Gid查询图片 (描述中的图或视频)-->
+    <select id="queryByGid3" resultType="com.mssm.domain.File">
+        select id,gid,fastDFSPath,fastDFSFileId,newFilepath
+          from file
+         where 1=1
+           and topPic = 0
            and gid = #{gid}
     </select>
     
     <!--删除商品关联图片-->
-    <delete id="delete" >
+    <delete id="deleteByGId" >
         delete from file
-        where topPic = 1
-          and gid = #{gid}
+        where gid = #{gid}
+    </delete>
+
+    <!--根据fileid删除file-->
+    <delete id="deleteByFId">
+        delete from file
+        where id = #{fid}
     </delete>
 
 </mapper>

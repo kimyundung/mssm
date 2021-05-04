@@ -30,4 +30,6 @@ public class Goods {
     private Date deletetime;    // 软删除标志字段
 
     private List<File> fileList;
+    private List<File> fileList3;
+
 }

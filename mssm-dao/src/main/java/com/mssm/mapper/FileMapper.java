@@ -19,7 +19,21 @@ public interface FileMapper {
     public List<File> queryByGid(Integer gid);
 
     /**
-     * 根据商品gid删除图片s
+     * 根据商品id查询图片信息
+     * @param gid
+     * @return
      */
-    public void delete(Integer gid);
+    public List<File> queryByGid3(Integer gid);
+
+    /**
+     * 根据商品gid删除图片s
+     * @param gid
+     */
+    public void deleteByGId(Integer gid);
+
+    /**
+     * 根据fileid删除file(物理)
+     * @param fid
+     */
+    public void deleteByFId(Integer fid);
 }
