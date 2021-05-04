@@ -21,6 +21,8 @@ import java.util.List;
 public class ManagerServiceImpl implements ManagerService {
 
     private static final String KEY = "misssimple";
+    private static final String PRE_URL = "http://106.75.253.40/";
+    private static final String PROJECT_NAME = "mssm";
 
     @Autowired
     private ManagerMapper managerMapper;
@@ -45,8 +47,8 @@ public class ManagerServiceImpl implements ManagerService {
             return null;
         }
         // 2.管理员存在 验证密码
-        String md5Password = Md5.md5(manager.getPassword(), "misssimple");
-        boolean verify = Md5.verify(manager.getPassword(), "misssimple", managerR.getPassword());
+        String md5Password = Md5.md5(manager.getPassword(), KEY);
+        boolean verify = Md5.verify(manager.getPassword(), KEY, managerR.getPassword());
         // 2.1 验证失败
         if (!verify){
             return null;
@@ -54,7 +56,7 @@ public class ManagerServiceImpl implements ManagerService {
         // 2.2 验证成功
         managerR.setPassword(null);
         // 2.2.1 token
-        String jwt = JwtUtil.createJWT(managerR.getId().toString(), "mssm", 1000*60*60*24L);
+        String jwt = JwtUtil.createJWT(managerR.getId().toString(), PROJECT_NAME, 1000*60*60*24L);
         HttpSession session = request.getSession();
         session.setAttribute("token", jwt);
         managerR.setToken(jwt);
@@ -72,7 +74,7 @@ public class ManagerServiceImpl implements ManagerService {
         // 处理头像
         if(managerVO.getNewFilepath()!=null){
             String fileId = UploadUtil.fdfsUpload(managerVO.getOriginalFilename(), managerVO.getNewFilepath());
-            managerVO.setPortrait("http://www.aaa.com/"+fileId);
+            managerVO.setPortrait(PRE_URL+fileId);
         }
         // 密码
         managerVO.setPassword(Md5.md5(managerVO.getPassword(), KEY));
@@ -84,7 +86,7 @@ public class ManagerServiceImpl implements ManagerService {
         // 处理头像
         if(managerVO.getNewFilepath()!=null){
             String fileId = UploadUtil.fdfsUpload(managerVO.getOriginalFilename(), managerVO.getNewFilepath());
-            managerVO.setPortrait("http://www.aaa.com/"+fileId);
+            managerVO.setPortrait(PRE_URL+fileId);
         }
         managerVO.setUpdatetime(new Date());
         managerMapper.updateManager(managerVO);

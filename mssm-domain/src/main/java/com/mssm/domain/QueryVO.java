@@ -5,15 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-/**
- * 参数分装类
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class QueryInfo {
-    private Integer level;
+public class QueryVO {
     private String query;
     private Integer status;
     private Integer pagenum;

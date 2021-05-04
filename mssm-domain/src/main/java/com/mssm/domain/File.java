@@ -9,8 +9,13 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class FileInfoWEB {
+public class File {
+    private Integer id;
+    private Integer gid;
     private String originalFilename;
     private String newFilename;
     private String newFilepath;
+    private String fastDFSFileId;
+    private String fastDFSPath;
+    private Integer topPic;
 }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mssm.mapper.FileMapper">
+
+    <!--添加图片信息-->
+    <insert id="addFile" parameterType="com.mssm.domain.File">
+        insert into file
+        (gid,originalFilename,newFilename,newFilepath,fastDFSFileId,fastDFSPath,topPic)
+        values
+        (#{gid},#{originalFilename},#{newFilename},#{newFilepath},#{fastDFSFileId},#{fastDFSPath},#{topPic})
+    </insert>
+
+    <!--根据商品Gid查询图片-->
+    <select id="queryByGid" resultType="com.mssm.domain.File">
+        select id,gid,fastDFSPath,fastDFSFileId,newFilepath
+          from file
+         where deleted = 0
+           and gid = #{gid}
+    </select>
+    
+    <!--删除商品关联图片-->
+    <delete id="delete" >
+        delete from file
+        where topPic = 1
+          and gid = #{gid}
+    </delete>
+
+</mapper>
