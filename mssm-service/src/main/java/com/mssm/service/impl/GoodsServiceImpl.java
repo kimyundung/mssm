@@ -4,6 +4,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mssm.domain.*;
 import com.mssm.mapper.FileMapper;
+import com.mssm.mapper.GoodsAttributeMapper;
+import com.mssm.mapper.GoodsCategoryMapper;
 import com.mssm.mapper.GoodsMapper;
 import com.mssm.service.FileService;
 import com.mssm.service.GoodsService;
@@ -21,6 +23,31 @@ public class GoodsServiceImpl implements GoodsService {
     private FileMapper fileMapper;
     @Autowired
     private FileService fileService;
+    @Autowired
+    private GoodsCategoryMapper goodsCategoryMapper;
+    @Autowired
+    private GoodsAttributeMapper goodsAttributeMapper;
+
+    // 条件+分页查询商品
+    @Override
+    public PageInfo<Goods> queryConditionPage(QueryVO queryVO) {
+        PageHelper.startPage(queryVO.getPagenum(),queryVO.getPagesize());
+        List<Goods> goodsList = goodsMapper.query(queryVO.getQuery(), queryVO.getStatus());
+        PageInfo<Goods> goodsPageInfo = new PageInfo<>(goodsList);
+        return goodsPageInfo;
+    }
+
+    @Override
+    public List<Goods> queryCondition(QueryVO queryVO) {
+        List<Goods> goodsList = goodsMapper.query(queryVO.getQuery(), queryVO.getStatus());
+        return goodsList;
+    }
+
+    // 查询所有商品
+    @Override
+    public List<Goods> queryAll() {
+        return goodsMapper.queryAll();
+    }
 
     // 添加商品
     @Override
@@ -36,30 +63,25 @@ public class GoodsServiceImpl implements GoodsService {
         }
     }
 
-    // 查询所有商品
-    @Override
-    public List<Goods> queryAll() {
-        return goodsMapper.queryAll();
-    }
-
-    // 条件+分页查询商品
-    @Override
-    public PageInfo<Goods> query(QueryVO queryVO) {
-        PageHelper.startPage(queryVO.getPagenum(),queryVO.getPagesize());
-        List<Goods> goodsList = goodsMapper.query(queryVO.getQuery(), queryVO.getStatus());
-        PageInfo<Goods> goodsPageInfo = new PageInfo<>(goodsList);
-        return goodsPageInfo;
-    }
-
     // 修改商品状态
     @Override
     public void status(Goods goods) {
         goodsMapper.status(goods.getId(),goods.getStatus());
     }
 
-    // 删除商品
+    /**
+     * 删除商品
+     * - 先删除相关分类
+     * - 再删除相关属性
+     * @param id
+     */
     @Override
     public void delete(Integer id) {
+        //1 删除分类
+        goodsCategoryMapper.deleteGoodsCategoryByGId(id);
+        //2 删除属性
+        goodsAttributeMapper.deleteGoodsAttributeByGId(id);
+        //3 删除商品
         goodsMapper.delete(id);
     }
 

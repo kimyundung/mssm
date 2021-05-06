@@ -32,4 +32,7 @@ public class Goods {
     private List<File> fileList;
     private List<File> fileList3;
 
+    private List<GoodsCategory> categoryList;
+    private List<GoodsAttribute> attributeList;
+
 }

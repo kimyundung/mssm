@@ -5,8 +5,29 @@
     <select id="findAllColor" resultType="com.mssm.domain.Color">
         select * from color
     </select>
+
+    <!--添加颜色-->
+    <insert id="addColor">
+        insert into color (name) values (#{name})
+    </insert>
+
+    <!--删除颜色-->
+    <delete id="deleteColor">
+        delete from color where id = #{id}
+    </delete>
+
     <select id="findAllSize" resultType="com.mssm.domain.Size">
         select * from size
     </select>
+
+    <!--添加尺码-->
+    <insert id="addSize">
+        insert into size (name) values (#{name})
+    </insert>
+
+    <!--删除尺码-->
+    <delete id="deleteSize">
+        delete from size where id = #{id}
+    </delete>
 
 </mapper>

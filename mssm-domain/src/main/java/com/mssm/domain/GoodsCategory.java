@@ -4,18 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GoodsStock {
+public class GoodsCategory {
     private Integer id;
     private Integer gid;
-    private Integer cid;
-    private Integer sid;
     private String gname;
-    private String cname;
-    private String sname;
-    private Integer stock;
+    private Integer cid1;
+    private Integer cid2;
+    private Integer cid3;
 }

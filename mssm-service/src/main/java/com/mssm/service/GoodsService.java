@@ -2,11 +2,8 @@ package com.mssm.service;
 
 import com.github.pagehelper.PageInfo;
 import com.mssm.domain.Goods;
-import com.mssm.domain.GoodsStock;
-import com.mssm.domain.QueryInfo;
 import com.mssm.domain.QueryVO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface GoodsService {
@@ -27,7 +24,14 @@ public interface GoodsService {
      * @param queryVO
      * @return
      */
-    public PageInfo<Goods> query(QueryVO queryVO);
+    public PageInfo<Goods> queryConditionPage(QueryVO queryVO);
+
+    /**
+     * 条件+分页查询
+     * @param queryVO
+     * @return
+     */
+    public List<Goods> queryCondition(QueryVO queryVO);
 
     /**
      * 修改商品状态

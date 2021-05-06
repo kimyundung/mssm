@@ -1,8 +1,6 @@
 package com.mssm.mapper;
 
 import com.mssm.domain.Goods;
-import com.mssm.domain.GoodsStock;
-import com.mssm.domain.QueryVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

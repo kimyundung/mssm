@@ -2,6 +2,7 @@ package com.mssm.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.mssm.domain.*;
+import com.mssm.service.GoodsAttributeService;
 import com.mssm.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @RequestMapping("/goods")
@@ -18,6 +20,30 @@ public class GoodsController {
 
     @Autowired
     private GoodsService goodsService;
+
+
+    // 查询商品
+    @RequestMapping("/query")
+    public ResponseResult query(@RequestBody QueryVO queryVO , HttpServletRequest request){
+        ResponseResult result = new ResponseResult();
+
+        try{
+            if(queryVO.getPagesize()!=null && queryVO.getPagenum()!=null){
+                //2.获取商品信息
+                PageInfo<Goods> goodsPageInfo = goodsService.queryConditionPage(queryVO);
+                result.setData(goodsPageInfo);
+            } else {
+                List<Goods> goods = goodsService.queryCondition(queryVO);
+            }
+            result.setMeta(new Meta(200,"成功查询商品列表"));
+            return result;
+        }catch (Exception e){
+            e.printStackTrace();
+            result.setMeta(new Meta(500,"失败查询商品列表, 产生意外"));
+            return result;
+        }
+
+    }
 
     /**
      * 保存商品(插入+更新)
@@ -36,25 +62,6 @@ public class GoodsController {
         }catch (Exception e){
             e.printStackTrace();
             result.setMeta(new Meta(500,"失败保存商品, 产生意外"));
-            return result;
-        }
-
-    }
-
-    // 查询商品
-    @RequestMapping("/query")
-    public ResponseResult query(@RequestBody QueryVO queryVO , HttpServletRequest request){
-        ResponseResult result = new ResponseResult();
-
-        try{
-            //2.获取商品信息
-            PageInfo<Goods> goodsPageInfo = goodsService.query(queryVO);
-            result.setData(goodsPageInfo);
-            result.setMeta(new Meta(200,"成功查询商品列表"));
-            return result;
-        }catch (Exception e){
-            e.printStackTrace();
-            result.setMeta(new Meta(500,"失败查询商品列表, 产生意外"));
             return result;
         }
 
@@ -114,5 +121,4 @@ public class GoodsController {
         }
 
     }
-
 }

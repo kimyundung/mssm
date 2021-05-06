@@ -35,7 +35,7 @@ public class UploadController {
             // 图片上传(本地+fdfs)
             Map<String, String> map = UploadUtil.upload("mssm", file, request,"106.75.253.40");
             // topPic==0 && id存在 保存到数据库
-            if(fileInfo.getTopPic()!=null && fileInfo.getGid()!=null){
+            if(fileInfo.getTopPic()!=null && fileInfo.getGid()>0){
                 fileInfo.setOriginalFilename(map.get("originalFilename"));
                 fileInfo.setNewFilename(map.get("newFilename"));
                 fileInfo.setNewFilepath(map.get("newFilepath"));
@@ -83,7 +83,7 @@ public class UploadController {
             }
 
             // topPic==0 && id存在 从数据库删除
-            if(file.getId()!=null){
+            if(file.getId()>0){
                 fileService.deleteFile(file.getId());
             }
 

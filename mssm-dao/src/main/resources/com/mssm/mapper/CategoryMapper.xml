@@ -112,4 +112,5 @@
            set deleted=1,deletetime=#{deletetime}
          where id = #{id}
     </update>
+
 </mapper>
