@@ -35,9 +35,8 @@ public interface GoodsService {
 
     /**
      * 修改商品状态
-     * @param goods
      */
-    public void status(Goods goods);
+    public boolean status(Goods goods);
 
     /**
      * 删除商品

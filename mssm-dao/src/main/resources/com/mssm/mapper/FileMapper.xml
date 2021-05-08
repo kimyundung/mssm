@@ -16,18 +16,20 @@
 
     <!--根据商品Gid查询图片 (主图)-->
     <select id="queryByGid" resultType="com.mssm.domain.File">
-        select id,gid,fastDFSPath,fastDFSFileId,newFilepath
+        select *
           from file
          where 1=1
+           and deleted = 0
            and topPic = 1
            and gid = #{gid}
     </select>
 
     <!--根据商品Gid查询图片 (描述中的图或视频)-->
     <select id="queryByGid3" resultType="com.mssm.domain.File">
-        select id,gid,fastDFSPath,fastDFSFileId,newFilepath
+        select *
           from file
          where 1=1
+           and deleted = 0
            and topPic = 0
            and gid = #{gid}
     </select>
@@ -43,5 +45,10 @@
         delete from file
         where id = #{fid}
     </delete>
+
+    <!--根据商品id逻辑删除-->
+    <update id="deleteByGIdLogic">
+        update file set deleted=1 where gid=#{gid}
+    </update>
 
 </mapper>

@@ -3,43 +3,42 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mssm.mapper.GoodsAttributeMapper">
 
-    <!--addGoodsAttribute-->
-    <insert id="addGoodsAttribute" parameterType="com.mssm.domain.GoodsAttribute">
+    <!--添加商品属性-->
+    <insert id="add" parameterType="com.mssm.domain.GoodsAttribute">
         <selectKey keyColumn="id" keyProperty="id" resultType="int" order="AFTER">
             SELECT LAST_INSERT_ID();
         </selectKey>
         insert into goodsattribute
-        (gid,cid,sid,gname,cname,sname)
+        (gid,cid,sid,gname,cname,sname,stock)
         values
-        (#{gid},#{cid},#{sid},#{gname},#{cname},#{sname})
+        (#{gid},#{cid},#{sid},#{gname},#{cname},#{sname},#{stock})
     </insert>
 
-    <!--根据商品id 删除商品属性相关信息-->
-    <delete id="deleteGoodsAttributeByGId">
-        delete from goodsattribute where gid = #{gid}
-    </delete>
-
-    <select id="findColorByGId" resultType="com.mssm.domain.Color">
-        select distinct cid id, cname name from goodsattribute where gid = #{gid}
-    </select>
-    <select id="findSizeByGId" resultType="com.mssm.domain.Size">
-        select distinct sid id, sname name from goodsattribute where gid = #{gid}
-    </select>
-
-    <!--findGoodsAttributeById-->
-    <select id="findGoodsAttributeById" resultType="com.mssm.domain.GoodsAttribute">
-        select * from goodsattribute where 1=1 and id=#{id}
-    </select>
-
+    <!--查询所有-->
     <select id="findAll" resultType="com.mssm.domain.GoodsAttribute">
-        select * from goodsattribute order by gid,cid,sid
+        select * from goodsattribute order by gid,cid,sid and deleted=0
     </select>
 
+    <!--根据商品id获取商品颜色-->
+    <select id="findColorByGId" resultType="com.mssm.domain.Color">
+        select distinct cid id, cname name from goodsattribute where gid = #{gid} and deleted=0
+    </select>
+    <!--根据商品id获取商品尺码-->
+    <select id="findSizeByGId" resultType="com.mssm.domain.Size">
+        select distinct sid id, sname name from goodsattribute where gid = #{gid} and deleted=0
+    </select>
+
+    <!--根据商品id查询-->
     <select id="findByGId" resultType="com.mssm.domain.GoodsAttribute">
-        select * from goodsattribute where gid = #{gid}
+        select * from goodsattribute where gid = #{gid} and deleted=0
     </select>
 
-    <!--queryGoodsWithStock-->
+    <!--根据属性id查询属性-->
+    <select id="findById" resultType="com.mssm.domain.GoodsAttribute">
+        select * from goodsattribute where id = #{id} and deleted=0
+    </select>
+
+    <!--查询商品+商品属性-->
     <resultMap id="goodsWithStockMap" type="com.mssm.domain.Goods">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
@@ -69,12 +68,23 @@
         update goodsattribute set stock=#{stock} where id = #{id}
     </update>
 
-    <!--根据属性id查询属性-->
-    <select id="findById" resultType="com.mssm.domain.GoodsAttribute">
-        select * from goodsattribute where id = #{id}
-    </select>
+    <!--根据商品id逻辑删除-->
+    <update id="deleteByGIdLogic">
+        update goodsattribute set deleted=1 where gid=#{gid}
+    </update>
 
+    <!--根据id删除-->
     <delete id="deleteById">
         delete from goodsattribute where id = #{id}
     </delete>
+
+    <!--根据商品id删除-->
+    <delete id="deleteByGId">
+        delete from goodsattribute where gid = #{gid}
+    </delete>
+
+    <!---->
+    <select id="cntByGId" resultType="int">
+        select COUNT(*) from goodsattribute where deleted=0 and gid=#{gid}
+    </select>
 </mapper>

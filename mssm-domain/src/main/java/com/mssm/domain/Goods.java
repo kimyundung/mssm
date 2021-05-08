@@ -17,7 +17,6 @@ import java.util.List;
 @ToString
 public class Goods {
     private Integer id;         // 主键id
-    private Integer cid;        // 分类id
     private String name;        // 商品名称
     private Double price;       // 商品价格
     private String introduce;   // 商品详情介绍

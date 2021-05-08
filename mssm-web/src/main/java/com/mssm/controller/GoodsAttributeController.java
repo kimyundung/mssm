@@ -18,14 +18,13 @@ public class GoodsAttributeController {
     @Autowired
     private GoodsCategoryService goodsCategoryService;
 
-    // 保存商品属性(新增+更新)
-    @RequestMapping("/addGoodsAttribute")
-    public ResponseResult addGoodsAttribute(@RequestBody Goods goods){
+    // 保存商品属性和分类(新增+更新)
+    @RequestMapping("/addGoodsAttrAndCat")
+    public ResponseResult addGoodsAttrAndCat(@RequestBody Goods goods){
         ResponseResult result = new ResponseResult();
         System.out.println(">>>>>>>>>>>>>>>>> "+ goods);
         try {
-            goodsAttributeService.addGoodsAttributeList(goods);
-            goodsCategoryService.addGoodsCategoryList(goods);
+            goodsAttributeService.addGoodsAttrAndCat(goods); // 保存属性
             result.setMeta(new Meta(200,"成功保存商品相关属性"));
             return result;
         } catch (Exception e) {

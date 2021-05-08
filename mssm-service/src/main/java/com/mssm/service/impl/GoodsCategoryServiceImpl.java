@@ -22,12 +22,12 @@ public class GoodsCategoryServiceImpl implements GoodsCategoryService {
     @Override
     public void addGoodsCategoryList(Goods goods) {
         //1 先删除
-        goodsCategoryMapper.deleteGoodsCategoryByGId(goods.getId());
+        goodsCategoryMapper.deleteByGId(goods.getId());
         //2 在添加
         for(GoodsCategory goodsCategory: goods.getCategoryList()){
             goodsCategory.setGid(goods.getId());
             goodsCategory.setGname(goods.getName());
-            goodsCategoryMapper.addGoodsCategory(goodsCategory);
+            goodsCategoryMapper.add(goodsCategory);
         }
     }
 

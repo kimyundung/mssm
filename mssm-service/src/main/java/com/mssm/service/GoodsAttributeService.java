@@ -9,10 +9,10 @@ import java.util.Map;
 public interface GoodsAttributeService {
 
     /**
-     * 添加商品库存
+     * 保存商品属性和分类(新增+更新)
      * @param goods
      */
-    public void addGoodsAttributeList(Goods goods);
+    public void addGoodsAttrAndCat(Goods goods);
 
     /**
      * 根据商品id 查询商品属性信息

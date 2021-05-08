@@ -3,7 +3,9 @@ package com.mssm.controller;
 import com.mssm.domain.File;
 import com.mssm.domain.Meta;
 import com.mssm.domain.ResponseResult;
+import com.mssm.domain.Swiper;
 import com.mssm.service.FileService;
+import com.mssm.service.SwiperService;
 import com.mssm.utils.JwtUtil;
 import com.mssm.utils.UploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,51 @@ import java.util.Map;
 public class UploadController {
 
     @Autowired
-    private FileService fileService;
+    private SwiperService swiperService;
+
+    //上传头像图片
+    @RequestMapping("/uploadPortraitPic")
+    public ResponseResult uploadPortraitPic(File fileInfo, @RequestParam("file")MultipartFile file, HttpServletRequest request){
+        System.out.println(">>>>>>>>>>>>>uploadGP fileInfo: " + fileInfo);
+        ResponseResult result = new ResponseResult();
+
+        try {
+            // 图片上传(本地+fdfs)
+            Map<String, String> map = UploadUtil.upload("mssm", file, request,"106.75.253.40");
+            // 响应数据
+            result.setData(map);
+            result.setMeta(new Meta(200,"成功上传文件"));
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setMeta(new Meta(500,"失败上传文件, 产生意外"));
+            return result;
+        }
+    }
+
+    // 轮播图上传并添加到数据库
+    @RequestMapping("/uploadSwiperPic")
+    public ResponseResult uploadSwiperPic(File fileInfo, @RequestParam("file") MultipartFile file, HttpServletRequest request){
+        //System.out.println(">>>>>>>>>>>>>>> fileInfo: "+fileInfo);
+        ResponseResult result = new ResponseResult();
+        try {
+            // 图片上传
+            Map<String, String> map = UploadUtil.upload("mssm", file, request,"106.75.253.40");
+            // 保存到数据库
+            Swiper swiper = new Swiper();
+            swiper.setName(map.get("originalFilename"));
+            swiper.setFileId(map.get("fastDFSFileId"));
+            swiper.setUrl(map.get("fastDFSPath"));
+            swiperService.add(swiper);
+            result.setData(swiper);
+            result.setMeta(new Meta(200,"成功上传轮播图"));
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setMeta(new Meta(500,"失败上传轮播图, 产生意外"));
+            return result;
+        }
+    }
 
     @RequestMapping("/uploadGoodsPic")
     public ResponseResult goodsPicUpload(File fileInfo, @RequestParam("file")MultipartFile file, HttpServletRequest request){
@@ -35,7 +81,7 @@ public class UploadController {
             // 图片上传(本地+fdfs)
             Map<String, String> map = UploadUtil.upload("mssm", file, request,"106.75.253.40");
             // topPic==0 && id存在 保存到数据库
-            if(fileInfo.getTopPic()!=null && fileInfo.getGid()>0){
+            /*if(fileInfo.getTopPic()!=null && fileInfo.getGid()>0){
                 fileInfo.setOriginalFilename(map.get("originalFilename"));
                 fileInfo.setNewFilename(map.get("newFilename"));
                 fileInfo.setNewFilepath(map.get("newFilepath"));
@@ -43,7 +89,7 @@ public class UploadController {
                 fileInfo.setFastDFSPath(map.get("fastDFSPath"));
                 fileService.addFile(fileInfo);
                 map.put("id",fileInfo.getId().toString());
-            }
+            }*/
             // 响应数据
             result.setData(map);
             result.setMeta(new Meta(200,"成功上传文件"));
@@ -70,12 +116,6 @@ public class UploadController {
 
         try {
 
-            /*// 删除图片(本地)
-            Boolean delete = true;
-            if (file!=null && file.getNewFilepath()!=null){
-                delete = UploadUtil.fileDelete(file.getNewFilepath());
-            }*/
-
             // 删除图片(本地+fdfs)
             Boolean delete = true;
             if (file!=null && file.getNewFilepath()!=null && file.getFastDFSFileId()!=null){
@@ -83,15 +123,15 @@ public class UploadController {
             }
 
             // topPic==0 && id存在 从数据库删除
-            if(file.getId()>0){
+            /*if(file.getId()>0){
                 fileService.deleteFile(file.getId());
-            }
+            }*/
 
             // 响应结构
             if(delete){
                 result.setMeta(new Meta(200,"成功删除文件"));
             }else {
-                result.setMeta(new Meta(500,"失败删除文件"));
+                result.setMeta(new Meta(501,"失败删除文件"));
             }
             return result;
         } catch (Exception e) {

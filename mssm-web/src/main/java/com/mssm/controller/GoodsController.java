@@ -21,6 +21,25 @@ public class GoodsController {
     @Autowired
     private GoodsService goodsService;
 
+    // 根据商品id查询商品+图片
+    @RequestMapping("/query/{id}")
+    public ResponseResult queryById(@PathVariable Integer id, HttpServletRequest request){
+        ResponseResult result = new ResponseResult();
+
+        try{
+            // 查询
+            Goods goods = goodsService.queryById(id);
+            result.setData(goods);
+            result.setMeta(new Meta(200,"成功查询商品+图片信息"));
+            return result;
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setMeta(new Meta(500,"失败查询商品+图片信息, 产生意外"));
+            return result;
+        }
+
+    }
+
 
     // 查询商品
     @RequestMapping("/query")
@@ -54,7 +73,7 @@ public class GoodsController {
     @RequestMapping("/addGoods")
     public ResponseResult addGoods(@RequestBody Goods goods, HttpServletRequest request){
         ResponseResult result = new ResponseResult();
-
+        System.out.println(">>>>>>>>>>>>>>>>> " + goods);
         try{
             goodsService.addGoods(goods);
             result.setMeta(new Meta(200,"成功保存商品"));
@@ -74,8 +93,12 @@ public class GoodsController {
 
         try{
             // 修改状态
-            goodsService.status(goods);
-            result.setMeta(new Meta(200,"成功修改商品状态"));
+            boolean b = goodsService.status(goods);
+            if(b){
+                result.setMeta(new Meta(200,"成功修改商品状态"));
+            } else {
+                result.setMeta(new Meta(501,"请设置商品分类,属性,库存后重试"));
+            }
             return result;
         }catch (Exception e) {
             e.printStackTrace();
@@ -85,7 +108,7 @@ public class GoodsController {
 
     }
 
-    // 删除商品
+    // 删除商品及关联属性,库存,分类
     @RequestMapping("/delete/{id}")
     public ResponseResult delete(@PathVariable Integer id, HttpServletRequest request){
         ResponseResult result = new ResponseResult();
@@ -98,25 +121,6 @@ public class GoodsController {
         }catch (Exception e) {
             e.printStackTrace();
             result.setMeta(new Meta(500,"失败删除商品, 产生意外"));
-            return result;
-        }
-
-    }
-
-    // 根据商品id查询商品+图片
-    @RequestMapping("/query/{id}")
-    public ResponseResult queryById(@PathVariable Integer id, HttpServletRequest request){
-        ResponseResult result = new ResponseResult();
-
-        try{
-            // 查询
-            Goods goods = goodsService.queryById(id);
-            result.setData(goods);
-            result.setMeta(new Meta(200,"成功查询商品+图片信息"));
-            return result;
-        }catch (Exception e) {
-            e.printStackTrace();
-            result.setMeta(new Meta(500,"失败查询商品+图片信息, 产生意外"));
             return result;
         }
 

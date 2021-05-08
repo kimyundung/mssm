@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mssm.mapper.SwiperMapper">
+
+    <!--添加轮播图-->
+    <insert id="add" parameterType="com.mssm.domain.Swiper">
+        <selectKey keyColumn="id" keyProperty="id" resultType="int" order="AFTER">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
+        insert into swiper
+        (name,fileid,url)
+        values
+        (#{name},#{fileId},#{url})
+    </insert>
+
+    <!--查询所有轮播图-->
+    <select id="queryAll" resultType="com.mssm.domain.Swiper">
+        select * from swiper
+    </select>
+
+    <!--根据id删除轮播图-->
+    <delete id="deleteById">
+        delete from swiper where id=#{id}
+    </delete>
+
+</mapper>

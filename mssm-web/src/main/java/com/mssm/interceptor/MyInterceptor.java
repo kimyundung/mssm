@@ -18,6 +18,7 @@ public class MyInterceptor implements HandlerInterceptor {
             return true;
         }
         return JwtUtil.verify(request.getHeader(AUTH));
+//        return true;
     }
 
     // 在目标方法执行之后, 视图对象返回之前执行

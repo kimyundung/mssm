@@ -4,24 +4,34 @@
 <mapper namespace="com.mssm.mapper.GoodsCategoryMapper">
 
     <select id="findAll" resultType="com.mssm.domain.GoodsCategory">
-        select * from goodscategory
+        select * from goodscategory where 1=1 and deleted=0
+    </select>
+
+    <!--findByGId-->
+    <select id="findByGId" resultType="com.mssm.domain.GoodsCategory">
+        select * from goodscategory where gid = #{gid} and deleted=0
+    </select>
+
+    <!---->
+    <select id="cntByGId" resultType="int">
+        select count(*) from goodscategory where deleted=0 and gid=#{gid}
     </select>
 
     <!--addGoodsCategory-->
-    <insert id="addGoodsCategory" parameterType="com.mssm.domain.GoodsCategory">
+    <insert id="add" parameterType="com.mssm.domain.GoodsCategory">
         insert into goodscategory
         (gid, gname, cid1, cid2, cid3)
         values
         (#{gid},#{gname},#{cid1},#{cid2},#{cid3})
     </insert>
 
-    <!--deleteGoodsCategoryByGId-->
-    <delete id="deleteGoodsCategoryByGId">
+    <!--deleteByGId-->
+    <delete id="deleteByGId">
         delete from goodscategory where gid = #{gid}
     </delete>
 
-    <!--findByGId-->
-    <select id="findByGId" resultType="com.mssm.domain.GoodsCategory">
-        select * from goodscategory where gid = #{gid}
-    </select>
+    <!--根据商品id逻辑删除-->
+    <update id="deleteByGIdLogic">
+        update goodscategory set deleted=1 where gid=#{gid}
+    </update>
 </mapper>

@@ -24,6 +24,7 @@
          where pid = -1
            and shown = 1
            and level = 0
+         ORDER BY onum
     </select>
 
     <!--查询子菜单-->
@@ -33,5 +34,6 @@
          where pid = #{id}
            and shown = 1
            and level = 1
+         ORDER BY onum
     </select>
 </mapper>

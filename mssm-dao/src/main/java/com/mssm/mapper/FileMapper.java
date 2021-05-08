@@ -36,4 +36,9 @@ public interface FileMapper {
      * @param fid
      */
     public void deleteByFId(Integer fid);
+
+    /**
+     * 根据商品id逻辑删除
+     */
+    public void deleteByGIdLogic(Integer gid);
 }

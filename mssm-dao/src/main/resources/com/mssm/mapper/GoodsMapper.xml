@@ -46,7 +46,7 @@
     <!--删除商品-->
     <update id="delete">
         update goods
-           set deleted = 1, updatetime = sysdate()
+           set deleted = 1, status = 0, updatetime = sysdate()
          where id = #{id}
     </update>
 

@@ -1,10 +1,8 @@
 package com.mssm.service.impl;
 
-import com.mssm.domain.Color;
-import com.mssm.domain.Goods;
-import com.mssm.domain.GoodsAttribute;
-import com.mssm.domain.Size;
+import com.mssm.domain.*;
 import com.mssm.mapper.GoodsAttributeMapper;
+import com.mssm.mapper.GoodsCategoryMapper;
 import com.mssm.service.GoodsAttributeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,14 +16,54 @@ public class GoodsAttributeServiceImpl implements GoodsAttributeService {
 
     @Autowired
     private GoodsAttributeMapper goodsAttributeMapper;
+    @Autowired
+    private GoodsCategoryMapper goodsCategoryMapper;
 
+    /**
+     * 保存商品属性和分类(新增+更新)
+     * 1. 查询已有属性和分类
+     * 2. 添加和删除操作
+     * @param goods
+     */
     @Override
-    public void addGoodsAttributeList(Goods goods) {
-        goodsAttributeMapper.deleteGoodsAttributeByGId(goods.getId());
-        for(GoodsAttribute goodsAttribute: goods.getAttributeList()){
-            goodsAttribute.setGid(goods.getId());
-            goodsAttribute.setGname(goods.getName());
-            goodsAttributeMapper.addGoodsAttribute(goodsAttribute);
+    public void addGoodsAttrAndCat(Goods goods) {
+
+        // 1 属性
+        //  根据商品id获取商品属性列表
+        List<GoodsAttribute> oldGAL = goodsAttributeMapper.findByGId(goods.getId());
+        //  页面传递过来的商品属性列表
+        List<GoodsAttribute> newGAL = goods.getAttributeList();
+        //  oldStock 赋值给 newStock
+        for (GoodsAttribute newGA : newGAL) {
+            // old相同的项new有, 则将库存数量赋值给new
+            newGA.setGid(goods.getId());
+            newGA.setGname(goods.getName());
+            newGA.setStock(0);
+            for (GoodsAttribute oldGA : oldGAL) {
+                if(newGA.getCid()==oldGA.getCid() && newGA.getSid()==oldGA.getSid()){
+                    newGA.setStock(oldGA.getStock());
+                    break;
+                }
+            }
+        }
+        //System.out.println("--------------- oldGAL: "+oldGAL);
+        //System.out.println("--------------- newGAL: "+newGAL);
+        // 删除oldAttr
+        goodsAttributeMapper.deleteByGId(goods.getId());
+        // 添加newAttr
+        for (GoodsAttribute newGA : newGAL) {
+            goodsAttributeMapper.add(newGA);
+        }
+
+        // 2 分类
+        //  删除oldCat
+        goodsCategoryMapper.deleteByGId(goods.getId());
+        //  添加newCat
+        List<GoodsCategory> newGCL = goods.getCategoryList();
+        for (GoodsCategory newGC : newGCL) {
+            newGC.setGid(goods.getId());
+            newGC.setGname(goods.getName());
+            goodsCategoryMapper.add(newGC);
         }
     }
 

@@ -12,13 +12,7 @@ public interface GoodsAttributeMapper {
      * 添加商品库存
      * @param goodsAttribute
      */
-    public void addGoodsAttribute(GoodsAttribute goodsAttribute);
-
-    /**
-     * 根据商品id 删除商品属性相关信息
-     * @param gid
-     */
-    public void deleteGoodsAttributeByGId(Integer gid);
+    public void add(GoodsAttribute goodsAttribute);
 
     /**
      * 根据id查询颜色信息
@@ -35,23 +29,22 @@ public interface GoodsAttributeMapper {
     public List<Size> findSizeByGId(Integer gid);
 
     /**
-     * 根据id查询商品属性
-     * @param id
-     * @return
-     */
-    public GoodsAttribute findGoodsAttributeById(Integer id);
-
-    /**
-     * 查询所有商品属性
+     * 查询所有
      * @return
      */
     public List<GoodsAttribute> findAll();
 
     /**
-     * 根据商品id查询属性
+     * 根据商品id查询
      * @return
      */
     public List<GoodsAttribute> findByGId(Integer gid);
+
+    /**
+     * 根据商品id删除
+     * @param gid
+     */
+    public void deleteByGId(Integer gid);
 
     /**
      * 查询商品+库存
@@ -86,4 +79,14 @@ public interface GoodsAttributeMapper {
      * 删除指定商品的库存项
      */
     public void deleteById(Integer id);
+
+    /**
+     * 根据商品id逻辑删除
+     */
+    public void deleteByGIdLogic(Integer Gid);
+
+    /**
+     * 根据商品id查询属性cnt
+     */
+    public Integer cntByGId(Integer gid);
 }

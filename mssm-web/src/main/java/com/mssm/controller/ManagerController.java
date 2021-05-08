@@ -47,12 +47,11 @@ public class ManagerController {
             ManagerR managerR = managerService.login(manager,request);
             if (managerR == null){
                 result.setMeta(new Meta(500,"登录失败, 用户名或密码错误"));
-                return result;
             } else {
                 result.setData(managerR);
                 result.setMeta(new Meta(200,"登录成功"));
-                return result;
             }
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
             result.setMeta(new Meta(501,"登录失败, 出现异常"));
